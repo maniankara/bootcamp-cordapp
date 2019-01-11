@@ -1,16 +1,18 @@
 buildscript {
-    ext.corda_release_group = 'net.corda'
-    ext.corda_release_version = 'corda-3.0'
-    ext.corda_gradle_plugins_version = '3.0.9'
-    ext.junit_version = '4.12'
-    ext.quasar_version = '0.7.9'
+    ext {
+        corda_release_group = 'net.corda'
+        corda_release_version = '4.0-SNAPSHOT'
+        corda_gradle_plugins_version = '4.0.37'
+        junit_version = '4.12'
+        quasar_version = '0.7.10'
+    }
 
     repositories {
         mavenLocal()
         mavenCentral()
         jcenter()
         maven { url 'https://jitpack.io' }
-        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+        maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda' }
         flatDir { dirs "lib/dependencies" }
     }
 
@@ -27,7 +29,9 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url 'https://jitpack.io' }
-    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-releases' }
+    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda' }
+    // Can be removed post-release - used to get nightly snapshot build.
+    maven { url 'https://ci-artifactory.corda.r3cev.com/artifactory/corda-dev' }
     flatDir { dirs "${project.rootProject.projectDir}/lib/dependencies" }
 }
 
@@ -35,6 +39,15 @@ apply plugin: 'java'
 apply plugin: 'net.corda.plugins.cordapp'
 apply plugin: 'net.corda.plugins.cordformation'
 apply plugin: 'net.corda.plugins.quasar-utils'
+
+cordapp {
+    info {
+        name "CorDapp Bootcamp"
+        vendor "Corda Open Source"
+        targetPlatformVersion 4
+        minimumPlatformVersion 4
+    }
+}
 
 sourceSets {
     main {
