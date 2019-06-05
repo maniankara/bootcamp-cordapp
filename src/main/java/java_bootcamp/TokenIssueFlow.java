@@ -7,6 +7,8 @@ import net.corda.core.transactions.SignedTransaction;
 import net.corda.core.transactions.TransactionBuilder;
 import net.corda.core.utilities.ProgressTracker;
 
+import java.util.Arrays;
+
 /* Our flow, automating the process of updating the ledger.
  * See src/main/java/examples/ArtTransferFlowInitiator.java for an example. */
 @InitiatingFlow
@@ -39,18 +41,24 @@ public class TokenIssueFlow extends FlowLogic<SignedTransaction> {
          *         TODO 1 - Create our TokenState to represent on-ledger tokens!
          * ===========================================================================*/
         // We create our new TokenState.
-        TokenState tokenState = null;
+        TokenState tokenState = new TokenState(issuer, owner, amount);
 
         /* ============================================================================
          *      TODO 3 - Build our token issuance transaction to update the ledger!
          * ===========================================================================*/
         // We build our transaction.
-        TransactionBuilder transactionBuilder = null;
+        TransactionBuilder transactionBuilder = new TransactionBuilder();
+        transactionBuilder.setNotary(notary);
+        transactionBuilder.addOutputState(tokenState, TokenContract.ID);
+        transactionBuilder.addCommand(new TokenContract.Commands.Issue(), Arrays.asList(issuer.getOwningKey()));
+
+
 
         /* ============================================================================
          *          TODO 2 - Write our TokenContract to control token issuance!
          * ===========================================================================*/
         // We check our transaction is valid based on its contracts.
+
         transactionBuilder.verify(getServiceHub());
 
         // We sign the transaction with our private key, making it immutable.
